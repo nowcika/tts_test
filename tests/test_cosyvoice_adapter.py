@@ -8,6 +8,8 @@ from korean_tts.errors import UserFacingError
 
 
 class FakeCosyVoiceModel:
+    sample_rate = 24000
+
     def __init__(self):
         self.calls = []
 
@@ -32,7 +34,7 @@ def test_text_only_uses_sft_path(monkeypatch, tmp_path):
     )
 
     assert result.waveform == [0.1, -0.1]
-    assert result.sample_rate == 22050
+    assert result.sample_rate == 24000
     assert fake_model.calls == [("sft", "안녕하세요", "中文女")]
 
 
@@ -44,11 +46,6 @@ def test_prompt_audio_uses_zero_shot_path(monkeypatch, tmp_path):
         "korean_tts.engines.cosyvoice._load_cosyvoice_model",
         lambda model_dir, device: fake_model,
     )
-    monkeypatch.setattr(
-        "korean_tts.engines.cosyvoice._load_prompt_audio_16k",
-        lambda path: "prompt-waveform",
-    )
-
     result = CosyVoiceEngine().synthesize(
         SynthesisRequest(
             text="따라 말합니다",
@@ -60,8 +57,8 @@ def test_prompt_audio_uses_zero_shot_path(monkeypatch, tmp_path):
     )
 
     assert result.waveform == [0.2, -0.2]
-    assert result.sample_rate == 22050
-    assert fake_model.calls == [("zero_shot", "따라 말합니다", "샘플입니다", "prompt-waveform")]
+    assert result.sample_rate == 24000
+    assert fake_model.calls == [("zero_shot", "따라 말합니다", "샘플입니다", str(prompt_audio))]
 
 
 def test_dependency_import_error_becomes_user_facing_error(monkeypatch, tmp_path):
