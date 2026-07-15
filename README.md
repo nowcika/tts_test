@@ -24,7 +24,13 @@ Clone the official CosyVoice repository into `vendor/CosyVoice`:
 
 ```bash
 mkdir -p vendor
-git clone https://github.com/FunAudioLLM/CosyVoice.git vendor/CosyVoice
+git clone --recursive https://github.com/FunAudioLLM/CosyVoice.git vendor/CosyVoice
+```
+
+If you already cloned without submodules, run:
+
+```bash
+git -C vendor/CosyVoice submodule update --init --recursive
 ```
 
 Install CosyVoice dependencies from the official repository:
@@ -37,6 +43,7 @@ Download the CosyVoice 2 model into
 `pretrained_models/CosyVoice2-0.5B`:
 
 ```bash
+pip install huggingface_hub
 python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
 ```
 

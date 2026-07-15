@@ -1,9 +1,11 @@
+import sys
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
 from korean_tts.engines.base import SynthesisRequest
-from korean_tts.engines.cosyvoice import CosyVoiceEngine
+from korean_tts.engines.cosyvoice import CosyVoiceEngine, _load_cosyvoice_model
 from korean_tts.errors import UserFacingError
 
 
@@ -69,3 +71,57 @@ def test_dependency_import_error_becomes_user_facing_error(monkeypatch, tmp_path
 
     with pytest.raises(UserFacingError, match="CosyVoice dependencies are not installed"):
         CosyVoiceEngine().synthesize(SynthesisRequest(text="안녕하세요", device="cpu", model_dir=tmp_path))
+
+
+def install_fake_cosyvoice_modules(monkeypatch, cuda_is_available):
+    construction_cuda_states = []
+    torch_module = ModuleType("torch")
+    torch_module.cuda = SimpleNamespace(is_available=cuda_is_available)
+
+    class FakeCosyVoice2:
+        def __init__(self, model_dir):
+            self.model_dir = model_dir
+            construction_cuda_states.append(torch_module.cuda.is_available())
+
+    cosyvoice_module = ModuleType("cosyvoice")
+    cli_module = ModuleType("cosyvoice.cli")
+    cosyvoice_cli_module = ModuleType("cosyvoice.cli.cosyvoice")
+    cosyvoice_cli_module.CosyVoice2 = FakeCosyVoice2
+
+    monkeypatch.setitem(sys.modules, "torch", torch_module)
+    monkeypatch.setitem(sys.modules, "cosyvoice", cosyvoice_module)
+    monkeypatch.setitem(sys.modules, "cosyvoice.cli", cli_module)
+    monkeypatch.setitem(sys.modules, "cosyvoice.cli.cosyvoice", cosyvoice_cli_module)
+
+    return torch_module, construction_cuda_states
+
+
+def test_load_cosyvoice_model_forces_cpu_during_construction(monkeypatch, tmp_path):
+    def cuda_is_available():
+        return True
+
+    torch_module, construction_cuda_states = install_fake_cosyvoice_modules(
+        monkeypatch, cuda_is_available
+    )
+
+    model = _load_cosyvoice_model(tmp_path, "cpu")
+
+    assert model.model_dir == str(tmp_path)
+    assert construction_cuda_states == [False]
+    assert torch_module.cuda.is_available is cuda_is_available
+    assert torch_module.cuda.is_available() is True
+
+
+def test_load_cosyvoice_model_leaves_cuda_available_for_cuda_device(monkeypatch, tmp_path):
+    def cuda_is_available():
+        return True
+
+    torch_module, construction_cuda_states = install_fake_cosyvoice_modules(
+        monkeypatch, cuda_is_available
+    )
+
+    _load_cosyvoice_model(tmp_path, "cuda")
+
+    assert construction_cuda_states == [True]
+    assert torch_module.cuda.is_available is cuda_is_available
+

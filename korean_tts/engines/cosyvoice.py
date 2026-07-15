@@ -1,11 +1,33 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator
 
 from .base import AudioResult, SynthesisRequest
 from ..errors import UserFacingError
 
 DEFAULT_SPEAKER = "中文女"
+
+
+@contextmanager
+def _force_cpu_if_requested(device: str) -> Iterator[None]:
+    if device != "cpu":
+        yield
+        return
+
+    try:
+        import torch
+    except ImportError:
+        yield
+        return
+
+    original_is_available = torch.cuda.is_available
+    torch.cuda.is_available = lambda: False
+    try:
+        yield
+    finally:
+        torch.cuda.is_available = original_is_available
 
 
 def _load_cosyvoice_model(model_dir: Path, device: str):
@@ -14,9 +36,10 @@ def _load_cosyvoice_model(model_dir: Path, device: str):
     except ImportError as exc:
         raise ImportError("CosyVoice is not importable") from exc
 
-    # CosyVoice uses PyTorch device state internally. Keep this adapter thin and
-    # pass the local model path through the official constructor.
-    return CosyVoice2(str(model_dir))
+    # CosyVoice chooses device from torch.cuda.is_available() during model
+    # construction, so CPU requests must mask CUDA while the model is created.
+    with _force_cpu_if_requested(device):
+        return CosyVoice2(str(model_dir))
 
 
 def _first_audio_chunk(chunks):
