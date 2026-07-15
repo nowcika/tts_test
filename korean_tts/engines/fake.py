@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from ..audio import ensure_output_path
 from .base import AudioResult, SynthesisRequest
 
 
@@ -12,5 +13,5 @@ class FakeEngine:
 
 
 def write_fake_output(path: Path, result: AudioResult) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(str(result.waveform), encoding="utf-8")
+    output_path = ensure_output_path(path)
+    output_path.write_text(str(result.waveform), encoding="utf-8")

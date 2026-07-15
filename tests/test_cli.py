@@ -56,6 +56,29 @@ def test_cli_generates_wav_with_fake_engine(tmp_path):
     assert output.read_text(encoding="utf-8") == "fake wav for: 안녕하세요\n"
 
 
+def test_cli_rejects_non_wav_output_with_fake_engine(tmp_path, capsys):
+    model_dir = tmp_path / "model"
+    model_dir.mkdir()
+
+    exit_code = main(
+        [
+            "안녕하세요",
+            "--engine",
+            "fake",
+            "--model-dir",
+            str(model_dir),
+            "--out",
+            str(tmp_path / "bad.txt"),
+            "--device",
+            "cpu",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 2
+    assert "Output path must end with .wav" in captured.err
+
+
 def test_cli_passes_prompt_audio_and_text_to_fake_engine(tmp_path):
     model_dir = tmp_path / "model"
     model_dir.mkdir()
