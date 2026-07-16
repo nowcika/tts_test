@@ -4,11 +4,28 @@ Local command-line Korean text-to-speech that writes WAV files using
 CosyVoice. The CLI supports Korean text input, CPU or CUDA device selection,
 automatic device selection, and prompt-audio voice cloning.
 
+## Requirements And Notes
+
+- Python 3.10 or newer is recommended. The development tests currently run on
+  Python 3.12.
+- Real synthesis requires the official CosyVoice repository and downloaded model
+  files. The unit tests and fake engine do not require CosyVoice or model files.
+- CUDA is optional. `--device auto` uses CUDA when PyTorch reports it is
+  available, otherwise CPU. `--device cpu` masks CUDA while CosyVoice constructs
+  the model so CPU execution can be forced.
+- CPU synthesis can be slow, especially for longer text or voice cloning.
+- Model files are large. Keep `vendor/`, `pretrained_models/`, and generated
+  `.wav` files out of git; this repository's `.gitignore` already excludes them.
+- Voice cloning works best when `--prompt-text` accurately matches the reference
+  audio in `--prompt-audio`.
+
 ## Development Setup
 
 Install the test dependencies:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements-dev.txt
 ```
 
@@ -38,6 +55,10 @@ Install CosyVoice dependencies from the official repository:
 ```bash
 pip install -r vendor/CosyVoice/requirements.txt
 ```
+
+Install a PyTorch build that matches your machine. For CUDA, use the wheel
+recommended by the PyTorch installer for your CUDA version. For CPU-only
+testing, a CPU PyTorch build is enough.
 
 Download the default text-only SFT model and the CosyVoice2 cloning model:
 
