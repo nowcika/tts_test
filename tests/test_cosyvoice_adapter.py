@@ -40,6 +40,28 @@ def test_text_only_uses_sft_path(monkeypatch, tmp_path):
     assert fake_model.calls == [("sft", "안녕하세요", "韩语女")]
 
 
+def test_text_only_concatenates_multiple_audio_chunks(monkeypatch, tmp_path):
+    class MultiChunkModel(FakeCosyVoiceModel):
+        def inference_sft(self, text, speaker):
+            self.calls.append(("sft", text, speaker))
+            yield {"tts_speech": [0.1, -0.1]}
+            yield {"tts_speech": [0.2, -0.2]}
+
+    fake_model = MultiChunkModel()
+    monkeypatch.setattr(
+        "korean_tts.engines.cosyvoice._load_cosyvoice_model",
+        lambda model_dir, device: fake_model,
+    )
+
+    result = CosyVoiceEngine().synthesize(
+        SynthesisRequest(text="긴 문장입니다", device="cpu", model_dir=tmp_path)
+    )
+
+    assert result.waveform == [0.1, -0.1, 0.2, -0.2]
+    assert result.sample_rate == 24000
+    assert fake_model.calls == [("sft", "긴 문장입니다", "韩语女")]
+
+
 def test_prompt_audio_uses_zero_shot_path(monkeypatch, tmp_path):
     fake_model = FakeCosyVoiceModel()
     prompt_audio = tmp_path / "prompt.wav"

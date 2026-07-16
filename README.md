@@ -22,7 +22,7 @@
 
 주의 사항:
 
-- CPU만으로도 실행할 수 있지만 음성 생성이 느릴 수 있습니다.
+- CPU만으로도 실행할 수 있지만 음성 생성이 느릴 수 있습니다. 긴 설명문 샘플 `samples/previous_answer_full.wav`는 CPU 환경에서 약 1시간 이상 걸렸습니다.
 - 모델 파일은 큽니다. `vendor/`, `pretrained_models/`, 생성된 `.wav` 파일은 git에 올리지 마세요. `.gitignore`에 이미 제외되어 있습니다.
 - 테스트용 `fake` 엔진은 CosyVoice와 모델 파일 없이 동작합니다.
 - 실제 음성 생성은 CosyVoice 저장소와 모델 다운로드가 필요합니다.
@@ -36,6 +36,8 @@
 - `samples/reference.wav`: voice cloning 명령의 `--prompt-audio` 경로 확인용 짧은 테스트 샘플입니다. 실제 사람 음성이 아니므로 품질 확인용은 아닙니다.
 - `samples/tts_korean.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다.`를 합성한 결과 파일입니다. 22.05kHz mono WAV이며, Whisper base 전사에서 `반갑습니다.`로 확인했습니다.
 - `samples/tts_korean_long.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다. 반갑습니다. 반갑습니다. 반갑습니다.`를 합성한 긴 샘플입니다. 약 5.4초 길이이며, Whisper base에서 한국어 `반갑습니다` 반복 음성으로 확인했습니다.
+- `samples/previous_answer_text.txt`: 이전 답변 전체를 음성 합성용으로 정리한 원문입니다.
+- `samples/previous_answer_full.wav`: `samples/previous_answer_text.txt`를 CosyVoice로 실제 합성한 긴 설명 샘플입니다. 약 149.5초, 22.05kHz mono WAV입니다. Whisper base 전사에서 한국어 음성으로 인식되는 것은 확인했지만, `CosyVoice`, `AutoModel`, `SFT` 같은 기술 용어와 긴 문장 때문에 원문과 정확히 일치하지 않는 오인식이 있습니다.
 
 ## 1. 저장소 받기
 
