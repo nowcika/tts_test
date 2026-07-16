@@ -32,14 +32,14 @@ def _force_cpu_if_requested(device: str) -> Iterator[None]:
 
 def _load_cosyvoice_model(model_dir: Path, device: str):
     try:
-        from cosyvoice.cli.cosyvoice import CosyVoice2
+        from cosyvoice.cli.cosyvoice import AutoModel
     except ImportError as exc:
         raise ImportError("CosyVoice is not importable") from exc
 
     # CosyVoice chooses device from torch.cuda.is_available() during model
     # construction, so CPU requests must mask CUDA while the model is created.
     with _force_cpu_if_requested(device):
-        return CosyVoice2(str(model_dir))
+        return AutoModel(model_dir=str(model_dir))
 
 
 def _first_audio_chunk(chunks):

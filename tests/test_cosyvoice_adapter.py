@@ -86,7 +86,7 @@ def install_fake_cosyvoice_modules(monkeypatch, cuda_is_available):
     cosyvoice_module = ModuleType("cosyvoice")
     cli_module = ModuleType("cosyvoice.cli")
     cosyvoice_cli_module = ModuleType("cosyvoice.cli.cosyvoice")
-    cosyvoice_cli_module.CosyVoice2 = FakeCosyVoice2
+    cosyvoice_cli_module.AutoModel = FakeCosyVoice2
 
     monkeypatch.setitem(sys.modules, "torch", torch_module)
     monkeypatch.setitem(sys.modules, "cosyvoice", cosyvoice_module)
