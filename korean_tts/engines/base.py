@@ -12,6 +12,8 @@ class SynthesisRequest:
     model_dir: Path
     prompt_audio: Path | None = None
     prompt_text: str = ""
+    voice: str = "ko-KR-SunHiNeural"
+    rate: str = "+0%"
 
 
 @dataclass(frozen=True)

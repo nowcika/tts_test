@@ -1,0 +1,9 @@
+source=samples/quality_check_text.txt
+audio=samples/quality_check.wav
+asr=samples/quality_check_whisper_base.txt
+asr_model=whisper base
+normalization=lowercase, keep only Korean letters, ASCII letters, and digits
+normalized_source_chars=114
+normalized_transcript_chars=114
+character_similarity_percent=100.0
+exact_match=True

@@ -11,6 +11,8 @@ from .engines.base import SynthesisRequest, TTSEngine
 from .engines.fake import FakeEngine, write_fake_output
 from .errors import UserFacingError
 
+DEFAULT_EDGE_VOICE = "ko-KR-SunHiNeural"
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Convert Korean text to a local WAV file.")
@@ -20,7 +22,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prompt-audio", help="Reference WAV file for voice cloning.")
     parser.add_argument("--prompt-text", default="", help="Transcript for --prompt-audio.")
     parser.add_argument("--model-dir", default="pretrained_models/CosyVoice-300M-SFT")
-    parser.add_argument("--engine", default="cosyvoice", choices=["cosyvoice", "fake"])
+    parser.add_argument("--engine", default="edge", choices=["cosyvoice", "edge", "fake"])
+    parser.add_argument("--voice", default=DEFAULT_EDGE_VOICE, help="Voice name for --engine edge.")
+    parser.add_argument("--rate", default="+0%", help="Speech rate for --engine edge, for example +10% or -10%.")
     return parser
 
 
@@ -33,7 +37,10 @@ def _validate_args(args: argparse.Namespace) -> None:
         if not prompt_audio.is_file():
             raise UserFacingError(f"Prompt audio does not exist: {prompt_audio}")
 
-    if args.engine != "fake":
+    if args.engine == "edge" and args.prompt_audio:
+        raise UserFacingError("--prompt-audio is only supported by the cosyvoice and fake engines.")
+
+    if args.engine == "cosyvoice":
         model_dir = Path(args.model_dir)
         if not model_dir.is_dir():
             raise UserFacingError(f"Model directory does not exist: {model_dir}")
@@ -46,7 +53,11 @@ def _create_engine(name: str) -> TTSEngine:
         from .engines.cosyvoice import CosyVoiceEngine
 
         return CosyVoiceEngine()
-    raise UserFacingError("Unsupported engine. Use one of: cosyvoice, fake.")
+    if name == "edge":
+        from .engines.edge import EdgeTTSEngine
+
+        return EdgeTTSEngine()
+    raise UserFacingError("Unsupported engine. Use one of: cosyvoice, edge, fake.")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -62,6 +73,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             model_dir=Path(args.model_dir),
             prompt_audio=Path(args.prompt_audio) if args.prompt_audio else None,
             prompt_text=args.prompt_text,
+            voice=args.voice,
+            rate=args.rate,
         )
         engine = _create_engine(args.engine)
         result = engine.synthesize(request)
