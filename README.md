@@ -38,8 +38,8 @@
 - `samples/quality_check.wav`: `edge` 엔진으로 생성한 검증용 WAV입니다. Whisper base 전사 후 정규화 문자 기준 100.0% 일치를 확인했습니다.
 - `samples/quality_check_whisper_base.txt`: `samples/quality_check.wav`를 Whisper base로 전사한 결과입니다.
 - `samples/quality_check_score.txt`: 원문과 전사문을 정규화해서 비교한 문자 유사도 결과입니다.
-- `samples/previous_answer_text.txt`: 이전 긴 기술 설명 답변을 음성 합성용으로 정리한 원문입니다.
-- `samples/previous_answer_full.wav`: `edge` 엔진으로 다시 생성한 긴 기술 설명 WAV입니다. 약 178.2초, 24kHz mono WAV입니다. 기술 용어가 많아 Whisper base 기준 정규화 문자 유사도는 93.4%였으므로 성공 기준 샘플로 보지 않습니다.
+- `samples/previous_answer_text.txt`: 이전 긴 기술 설명 답변을 음성 합성용 한글 발음 기준으로 정리한 원문입니다.
+- `samples/previous_answer_full.wav`: `edge` 엔진으로 다시 생성한 긴 기술 설명 WAV입니다. 약 176.0초, 24kHz mono WAV입니다. 기술 용어가 많아 Whisper base 기준 정규화 문자 유사도는 93.1%였으므로 성공 기준 샘플로 보지 않습니다.
 - `samples/reference.wav`: CosyVoice voice cloning 명령의 `--prompt-audio` 경로 확인용 짧은 테스트 샘플입니다. 실제 사람 음성이 아니므로 품질 확인용은 아닙니다.
 - `samples/tts_korean.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다.`를 합성한 결과 파일입니다.
 - `samples/tts_korean_long.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다. 반갑습니다. 반갑습니다. 반갑습니다.`를 합성한 샘플입니다.
