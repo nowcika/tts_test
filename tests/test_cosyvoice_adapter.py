@@ -37,7 +37,7 @@ def test_text_only_uses_sft_path(monkeypatch, tmp_path):
 
     assert result.waveform == [0.1, -0.1]
     assert result.sample_rate == 24000
-    assert fake_model.calls == [("sft", "안녕하세요", "中文女")]
+    assert fake_model.calls == [("sft", "안녕하세요", "韩语女")]
 
 
 def test_prompt_audio_uses_zero_shot_path(monkeypatch, tmp_path):

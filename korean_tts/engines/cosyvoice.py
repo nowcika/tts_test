@@ -7,7 +7,7 @@ from typing import Iterator
 from .base import AudioResult, SynthesisRequest
 from ..errors import UserFacingError
 
-DEFAULT_SPEAKER = "中文女"
+DEFAULT_SPEAKER = "韩语女"
 
 
 @contextmanager

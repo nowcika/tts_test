@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from korean_tts.audio import ensure_output_path, write_wav
+from korean_tts.audio import _normalize_waveform, ensure_output_path, write_wav
 from korean_tts.engines.base import AudioResult
 from korean_tts.errors import UserFacingError
 
@@ -31,3 +31,14 @@ def test_write_wav_delegates_to_soundfile(monkeypatch, tmp_path):
     write_wav(output, result)
 
     assert calls == [(str(output), [0.0, 0.1, -0.1], 24000)]
+
+
+def test_normalize_waveform_squeezes_single_channel_numpy_array():
+    import numpy as np
+
+    waveform = np.array([[0.0, 0.1, -0.1]])
+
+    normalized = _normalize_waveform(waveform)
+
+    assert normalized.shape == (3,)
+    assert normalized.tolist() == [0.0, 0.1, -0.1]

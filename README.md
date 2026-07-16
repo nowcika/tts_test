@@ -28,6 +28,14 @@
 - 실제 음성 생성은 CosyVoice 저장소와 모델 다운로드가 필요합니다.
 - voice cloning 품질은 `--prompt-audio`와 `--prompt-text`가 정확히 맞을수록 좋아집니다.
 
+
+## 포함된 샘플 WAV
+
+저장소에는 두 가지 샘플 WAV가 포함되어 있습니다.
+
+- `samples/reference.wav`: voice cloning 명령의 `--prompt-audio` 경로 확인용 짧은 테스트 샘플입니다. 실제 사람 음성이 아니므로 품질 확인용은 아닙니다.
+- `samples/tts_korean.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다.`를 합성한 결과 파일입니다. 22.05kHz mono WAV이며, Whisper base 전사에서 `반갑습니다.`로 확인했습니다.
+
 ## 1. 저장소 받기
 
 PowerShell에서 실행합니다.
