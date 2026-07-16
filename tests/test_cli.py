@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from korean_tts.cli import main
@@ -69,8 +71,8 @@ def test_cli_rejects_non_wav_output_with_fake_engine(tmp_path, capsys):
 
 
 def test_cli_passes_prompt_audio_and_text_to_fake_engine(tmp_path):
-    prompt_audio = tmp_path / "sample.wav"
-    prompt_audio.write_bytes(b"sample")
+    prompt_audio = Path("samples/reference.wav")
+    assert prompt_audio.is_file()
     output = tmp_path / "cloned.wav"
 
     exit_code = main(

@@ -169,14 +169,14 @@ CUDA가 제대로 잡히지 않으면 `--device cpu`로 먼저 확인하세요.
 
 ### 참고 음성 기반 voice cloning
 
-`reference.wav`에 참고 음성을 준비하고, `--prompt-text`에는 그 참고 음성에서 실제로 말한 문장을 넣습니다.
+예제 파일 `samples/reference.wav`를 포함했습니다. 이 파일은 경로와 WAV 형식 확인용 짧은 테스트 샘플이며, 실제 voice cloning 품질 확인에는 사람이 말한 참고 음성을 사용하는 것이 좋습니다. 실제 참고 음성을 쓸 때는 `--prompt-text`에 그 음성에서 실제로 말한 문장을 넣습니다.
 
 ```powershell
 $env:PYTHONPATH = "vendor/CosyVoice"
 python tts.py "이 목소리로 말합니다." `
   --model-dir pretrained_models/CosyVoice2-0.5B `
-  --prompt-audio reference.wav `
-  --prompt-text "참고 음성의 실제 문장입니다." `
+  --prompt-audio samples/reference.wav `
+  --prompt-text "테스트 샘플입니다." `
   --out cloned.wav
 ```
 
@@ -200,8 +200,8 @@ python tts.py "CUDA 검증 문장입니다." --device cuda --out cuda-check.wav
 $env:PYTHONPATH = "vendor/CosyVoice"
 python tts.py "참고 음성과 비슷하게 말합니다." `
   --model-dir pretrained_models/CosyVoice2-0.5B `
-  --prompt-audio reference.wav `
-  --prompt-text "참고 음성의 실제 문장입니다." `
+  --prompt-audio samples/reference.wav `
+  --prompt-text "테스트 샘플입니다." `
   --out cloned-check.wav
 ```
 
