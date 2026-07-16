@@ -27,7 +27,7 @@ Initial CLI options:
 - `--device`: `auto`, `cpu`, or `cuda`; default `auto`.
 - `--prompt-audio`: optional reference audio file for voice cloning.
 - `--prompt-text`: optional transcript of `--prompt-audio`; when omitted, the first implementation will pass an empty prompt transcript and document that quality is better when a transcript is supplied.
-- `--model-dir`: local model directory, defaulting to `pretrained_models/CosyVoice2-0.5B`.
+- `--model-dir`: local model directory, defaulting to `pretrained_models/CosyVoice-300M-SFT` for text-only synthesis. Use `pretrained_models/CosyVoice2-0.5B` with `--prompt-audio` for voice cloning.
 - `--engine`: defaults to `cosyvoice`.
 
 ## Architecture

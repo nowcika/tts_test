@@ -464,7 +464,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
     parser.add_argument("--prompt-audio", help="Reference WAV file for voice cloning.")
     parser.add_argument("--prompt-text", default="", help="Transcript for --prompt-audio.")
-    parser.add_argument("--model-dir", default="pretrained_models/CosyVoice2-0.5B")
+    parser.add_argument("--model-dir", default="pretrained_models/CosyVoice-300M-SFT")
     parser.add_argument("--engine", default="cosyvoice", choices=["cosyvoice", "fake"])
     return parser
 
@@ -771,7 +771,7 @@ git clone --recursive https://github.com/FunAudioLLM/CosyVoice.git vendor/CosyVo
 cd vendor/CosyVoice
 pip install -r requirements.txt
 cd ../..
-python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
+python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice-300M-SFT', local_dir='pretrained_models/CosyVoice-300M-SFT'); snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
 ```
 
 If the CosyVoice import path is not visible, run the CLI with:

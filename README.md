@@ -39,18 +39,25 @@ Install CosyVoice dependencies from the official repository:
 pip install -r vendor/CosyVoice/requirements.txt
 ```
 
-Download the CosyVoice 2 model into
-`pretrained_models/CosyVoice2-0.5B`:
+Download the default text-only SFT model and the CosyVoice2 cloning model:
+
+```text
+pretrained_models/CosyVoice-300M-SFT
+pretrained_models/CosyVoice2-0.5B
+```
+
+Download both models:
 
 ```bash
 pip install huggingface_hub
-python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
+python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice-300M-SFT', local_dir='pretrained_models/CosyVoice-300M-SFT'); snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
 ```
 
 You can also use the official CosyVoice model download instructions for your
-environment. Make sure the final local directory exists at:
+environment. Make sure the final local directories exist at:
 
 ```text
+pretrained_models/CosyVoice-300M-SFT
 pretrained_models/CosyVoice2-0.5B
 ```
 
@@ -85,6 +92,7 @@ Prompt-audio voice cloning:
 
 ```bash
 PYTHONPATH=vendor/CosyVoice python tts.py "이 목소리로 말합니다." \
+  --model-dir pretrained_models/CosyVoice2-0.5B \
   --prompt-audio reference.wav \
   --prompt-text "참고 음성의 실제 문장입니다." \
   --out cloned.wav
@@ -93,9 +101,7 @@ PYTHONPATH=vendor/CosyVoice python tts.py "이 목소리로 말합니다." \
 `--prompt-text` is optional when using `--prompt-audio`, but providing an
 accurate transcript usually improves cloning quality.
 
-By default, the CLI loads the model from
-`pretrained_models/CosyVoice2-0.5B`. Use `--model-dir` to point at a different
-local model directory.
+By default, the CLI loads `pretrained_models/CosyVoice-300M-SFT` for text-only synthesis. Use `--model-dir pretrained_models/CosyVoice2-0.5B` with `--prompt-audio` for voice cloning, or point `--model-dir` at another compatible local model directory.
 
 ## Manual Real-Model Verification
 
@@ -116,6 +122,7 @@ PYTHONPATH=vendor/CosyVoice python tts.py "CUDA 검증 문장입니다." \
 
 ```bash
 PYTHONPATH=vendor/CosyVoice python tts.py "참고 음성과 비슷하게 말합니다." \
+  --model-dir pretrained_models/CosyVoice2-0.5B \
   --prompt-audio reference.wav \
   --prompt-text "참고 음성의 실제 문장입니다." \
   --out /tmp/korean-tts-cloned.wav

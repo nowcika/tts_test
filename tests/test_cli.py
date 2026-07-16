@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from korean_tts.cli import main
@@ -26,7 +24,7 @@ def test_cli_rejects_missing_prompt_audio(tmp_path, capsys):
 def test_cli_rejects_missing_model_dir(tmp_path, capsys):
     missing_model = tmp_path / "model"
 
-    exit_code = main(["안녕하세요", "--engine", "fake", "--model-dir", str(missing_model)])
+    exit_code = main(["안녕하세요", "--engine", "cosyvoice", "--model-dir", str(missing_model)])
 
     captured = capsys.readouterr()
     assert exit_code == 2
@@ -34,8 +32,6 @@ def test_cli_rejects_missing_model_dir(tmp_path, capsys):
 
 
 def test_cli_generates_wav_with_fake_engine(tmp_path):
-    model_dir = tmp_path / "model"
-    model_dir.mkdir()
     output = tmp_path / "hello.wav"
 
     exit_code = main(
@@ -43,8 +39,6 @@ def test_cli_generates_wav_with_fake_engine(tmp_path):
             "안녕하세요",
             "--engine",
             "fake",
-            "--model-dir",
-            str(model_dir),
             "--out",
             str(output),
             "--device",
@@ -57,16 +51,11 @@ def test_cli_generates_wav_with_fake_engine(tmp_path):
 
 
 def test_cli_rejects_non_wav_output_with_fake_engine(tmp_path, capsys):
-    model_dir = tmp_path / "model"
-    model_dir.mkdir()
-
     exit_code = main(
         [
             "안녕하세요",
             "--engine",
             "fake",
-            "--model-dir",
-            str(model_dir),
             "--out",
             str(tmp_path / "bad.txt"),
             "--device",
@@ -80,8 +69,6 @@ def test_cli_rejects_non_wav_output_with_fake_engine(tmp_path, capsys):
 
 
 def test_cli_passes_prompt_audio_and_text_to_fake_engine(tmp_path):
-    model_dir = tmp_path / "model"
-    model_dir.mkdir()
     prompt_audio = tmp_path / "sample.wav"
     prompt_audio.write_bytes(b"sample")
     output = tmp_path / "cloned.wav"
@@ -91,8 +78,6 @@ def test_cli_passes_prompt_audio_and_text_to_fake_engine(tmp_path):
             "따라 말합니다",
             "--engine",
             "fake",
-            "--model-dir",
-            str(model_dir),
             "--prompt-audio",
             str(prompt_audio),
             "--prompt-text",
