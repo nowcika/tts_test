@@ -35,6 +35,7 @@
 
 - `samples/reference.wav`: voice cloning 명령의 `--prompt-audio` 경로 확인용 짧은 테스트 샘플입니다. 실제 사람 음성이 아니므로 품질 확인용은 아닙니다.
 - `samples/tts_korean.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다.`를 합성한 결과 파일입니다. 22.05kHz mono WAV이며, Whisper base 전사에서 `반갑습니다.`로 확인했습니다.
+- `samples/tts_korean_long.wav`: CosyVoice로 실제 한글 텍스트 `반갑습니다. 반갑습니다. 반갑습니다. 반갑습니다.`를 합성한 긴 샘플입니다. 약 5.4초 길이이며, Whisper base에서 한국어 `반갑습니다` 반복 음성으로 확인했습니다.
 
 ## 1. 저장소 받기
 
